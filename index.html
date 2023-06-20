@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+    /* Styles for the page */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: #333;
+      font-size: 24px;
+    }
+    
+    .refresh-button {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .refresh-button:hover {
+      background-color: #0056b3;
+    }
+    .hidden_information {
+      display: none;
+    }
+  </style>
+  <script>
+    // Function that sends a request to the /remove endpoint. This should be a post request, and should also contain the filename of the file to be removed.
+    function Remove() {
+      var file_name = document.getElementsByClassName("Hidden_Information")[0].innerHTML;
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/remove/" + file_name, true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({
+        file_name: file_name
+      }));
+      xhr.onload = function() {
+        if (xhr.status == 200) {
+          window.location.reload();
+        }
+      }
+    }
+  </script>
+    <title>Site Generator</title>
+  </head>
+	
+  <body>
+    <div class="Hidden_Information">{{ file_name|safe }}</div>
+	<h1>Site takes about 30/45 seconds to reload. Please be patient.</h1>
+  	<button class="refresh-button" onclick="window.location.reload()">Refresh</button>
+	<!-- Button that removes the HTML file. Send reqeust to /remove endpoint and then refresh the page -->
+    <button class="refresh-button" onclick=Remove()>Remove</button>
+
+    {{ generated_html|safe }}
+  </body>
+</html>
